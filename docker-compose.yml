@@ -1,0 +1,29 @@
+services:
+  spring-app:
+    container_name: 'spring-app'
+    build:
+      context: .
+    develop:
+      watch:
+        - action: rebuild
+          path: build/libs
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    container_name: 'mysql'
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_DATABASE: 'testdb'
+    volumes:
+      - /tmp/mysql/mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql

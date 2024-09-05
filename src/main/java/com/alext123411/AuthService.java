@@ -1,5 +1,6 @@
 package com.alext123411;
 
+import com.alext123411.DTO.GitHubCallBack;
 import com.alext123411.DTO.LoginRequest;
 import com.alext123411.DTO.LoginResponse;
 import com.alext123411.DTO.RegisterRequest;
@@ -35,5 +36,7 @@ public class AuthService {
         return uuid.toString();
     }
 
-
+    public String loginGithub(GitHubCallBack request) {
+        return request.getStr();
+    }
 }
