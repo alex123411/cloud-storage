@@ -22,11 +22,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.2")
     implementation("mysql:mysql-connector-java:8.0.33")
     // security
-    implementation("org.springframework.boot:spring-boot-starter-security:3.3.2")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.3.2")
-    implementation("org.apache.commons:commons-lang3:3.17.0")
-    runtimeOnly("com.nimbusds:oauth2-oidc-sdk:11.14")
-    compileOnly("javax.servlet:servlet-api:2.5")
+    implementation("org.springframework.boot:spring-boot-starter-security:3.3.0")
+//    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.3.2")
+//    implementation("org.apache.commons:commons-lang3:3.17.0")
+//    runtimeOnly("com.nimbusds:oauth2-oidc-sdk:11.14")
+//    compileOnly("javax.servlet:servlet-api:2.5")
     // lombok
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
