@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
+
 @RestController
 @RequestMapping("api/v1/auth")
 @Validated
@@ -17,32 +19,23 @@ public class AuthController {
     @Autowired
     AuthService service;
 
-    @GetMapping("/")
+    @GetMapping("/public/test")
     public String check() {
-        return "Auth servasd";
+        return "It works!";
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
-            @RequestBody RegisterRequest request
-    ) throws Exception {
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) throws Exception {
         return ResponseEntity.ok(service.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(
-            @RequestBody LoginRequest request
-    ) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
     }
 
-    // http://localhost:8080/api/v1/auth/oauth2/code/github
-    @PostMapping("/oauth2/code/github")
-    public ResponseEntity<String> loginGithub(
-            @RequestBody GitHubCallBack request,
-            @RequestParam String code
-    ) {
-        System.out.println(code);
-        return ResponseEntity.ok(service.loginGithub(request));
+    @GetMapping("/public/oauth2/code/github")
+    public ResponseEntity<String> loginGithub(@RequestParam String code) throws AccessDeniedException {
+        return ResponseEntity.ok(service.loginGithub(code));
     }
 }

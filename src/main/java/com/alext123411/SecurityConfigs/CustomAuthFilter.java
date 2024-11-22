@@ -53,17 +53,19 @@ public class CustomAuthFilter implements Filter {
         ServletResponse servletResponse,
         FilterChain chain) throws IOException, ServletException {
 
+        System.out.println("CUSTOM AUTH FILTER");
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String header = request.getHeader("Authorization");
         String token = header.substring(7);
 
-
         ghService.fetchUser(token);
 
         boolean hasAccess = true;
         if (hasAccess) {
+
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             Authentication authentication =
                 new TestingAuthenticationToken("username", "password", "ROLE_USER");
@@ -75,49 +77,5 @@ public class CustomAuthFilter implements Filter {
         }
 
         throw new AccessDeniedException("Access Denied");
-
-//        ghService.printProperties();
-//
-//        String baseUrl = "https://api.github.com/user";
-//
-//        String accessToken = " ";
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", "Bearer " + accessToken);
-//        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<String> response_2 = restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class);
-//        System.out.println(response_2.getBody());
     }
-//
-//    private Authentication getAuthentication(String token) {
-//        // Implement your token validation and authentication logic here
-//        // For example, you could parse the token and return an Authentication object
-//
-//        String baseUrl = "https://github.com/login/oauth/access_token";
-//        String clientId = " ";
-//        String clientSecret = " ";
-//
-//        String url = UriComponentsBuilder.fromHttpUrl(baseUrl)
-//            .queryParam("client_id", clientId)
-//            .queryParam("client_secret", clientSecret)
-//            .queryParam("code", token)
-//            .toUriString();
-//
-//        System.out.println(url);
-//
-//        String response = restTemplate.getForObject(url, String.class);
-//
-//        System.out.println(response);
-//
-//        String accessToken = " ";
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", "Bearer " + accessToken);
-//        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<String> response_2 = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-//        System.out.println(response_2.getBody());
-//
-////        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-//        return null; // Replace with actual Authentication object
-//    }
 }

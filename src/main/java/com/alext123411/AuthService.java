@@ -4,16 +4,26 @@ import com.alext123411.DTO.GitHubCallBack;
 import com.alext123411.DTO.LoginRequest;
 import com.alext123411.DTO.LoginResponse;
 import com.alext123411.DTO.RegisterRequest;
+import com.alext123411.Integration.GitHubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.UUID;
 
 @Service
 public class AuthService {
 
-    @Autowired
-    private UserRepo repo;
+    private final GitHubService gitHubService;
+    private final UserRepo repo;
+
+    public AuthService(
+        GitHubService gitHubService,
+        UserRepo repo
+    ) {
+        this.gitHubService = gitHubService;
+        this.repo = repo;
+    }
 
     public LoginResponse login(LoginRequest request) {
         // Return session token
@@ -36,7 +46,7 @@ public class AuthService {
         return uuid.toString();
     }
 
-    public String loginGithub(GitHubCallBack request) {
-        return request.getStr();
+    public String loginGithub(String code) throws AccessDeniedException {
+        return gitHubService.getAccessToken(code);
     }
 }
