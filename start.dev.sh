@@ -1,2 +1,2 @@
-sudo gradle build
-sudo docker compose up --watch
+gradle build
+docker compose up --watch

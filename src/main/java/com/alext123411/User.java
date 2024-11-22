@@ -22,6 +22,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer Id;
 
+    private String login;
+
     private UUID uuid;
 
     private String email;

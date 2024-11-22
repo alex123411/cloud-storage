@@ -1,5 +1,6 @@
 package com.alext123411.Integration;
 
+import com.alext123411.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class GitHubService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    public void fetchUser(String token) throws AccessDeniedException {
+    public String fetchUser(String token) throws AccessDeniedException {
         String url = gitHubApiBaseUrl + "/user";
 
         HttpHeaders headers = new HttpHeaders();
@@ -40,6 +41,7 @@ public class GitHubService {
 
         String responseBody = response.getBody();
         System.out.println(responseBody);
+        return responseBody;
     }
 
     public String getAccessToken(String code) throws AccessDeniedException {

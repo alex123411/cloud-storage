@@ -6,6 +6,9 @@ import com.alext123411.DTO.LoginResponse;
 import com.alext123411.DTO.RegisterRequest;
 import com.alext123411.Integration.GitHubService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
@@ -48,5 +51,16 @@ public class AuthService {
 
     public String loginGithub(String code) throws AccessDeniedException {
         return gitHubService.getAccessToken(code);
+    }
+
+    public String getCurrentUser() {
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        Authentication auth =  context.getAuthentication();
+
+        String princ = auth.getPrincipal().toString();
+
+        return princ;
+
     }
 }

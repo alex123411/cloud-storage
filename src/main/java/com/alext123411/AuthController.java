@@ -21,7 +21,7 @@ public class AuthController {
 
     @GetMapping("/public/test")
     public String check() {
-        return "It works!";
+        return "It works!! And upd";
     }
 
     @PostMapping("/register")
@@ -32,6 +32,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(service.login(request));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<String> loggedInUser() {
+        return ResponseEntity.ok(service.getCurrentUser());
     }
 
     @GetMapping("/public/oauth2/code/github")

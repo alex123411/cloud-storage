@@ -2,6 +2,7 @@ package com.alext123411.SecurityConfigs;
 
 
 import com.alext123411.Integration.GitHubService;
+import com.alext123411.User;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -61,14 +62,14 @@ public class CustomAuthFilter implements Filter {
         String header = request.getHeader("Authorization");
         String token = header.substring(7);
 
-        ghService.fetchUser(token);
+        String user = ghService.fetchUser(token);
 
         boolean hasAccess = true;
         if (hasAccess) {
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             Authentication authentication =
-                new TestingAuthenticationToken("username", "password", "ROLE_USER");
+                new TestingAuthenticationToken(user, "password", "ROLE_USER");
             context.setAuthentication(authentication);
 
             SecurityContextHolder.setContext(context);
