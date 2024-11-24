@@ -1,4 +1,4 @@
-package com.alext123411.DTO;
+package com.alext123411.dto;
 
 import lombok.*;
 

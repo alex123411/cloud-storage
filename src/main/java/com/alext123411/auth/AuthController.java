@@ -1,9 +1,5 @@
-package com.alext123411;
+package com.alext123411.auth;
 
-import com.alext123411.DTO.LoginRequest;
-import com.alext123411.DTO.LoginResponse;
-import com.alext123411.DTO.RegisterRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +19,12 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/login")
+    @GetMapping("/public/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("test");
+    }
+
+    @GetMapping("/public/login")
     public ResponseEntity<String> login() {
         return ResponseEntity.ok(authService.login());
     }

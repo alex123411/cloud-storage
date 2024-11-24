@@ -1,5 +1,7 @@
-package com.alext123411.Integration;
+package com.alext123411.github;
 
+import com.alext123411.dto.GitHubUser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +27,7 @@ public class GitHubService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String fetchUser(String token) throws AccessDeniedException {
+    public GitHubUser fetchUser(String token) throws AccessDeniedException {
         String url = gitHubApiBaseUrl + "/user";
 
         HttpHeaders headers = new HttpHeaders();
@@ -41,8 +43,9 @@ public class GitHubService {
             throw new AccessDeniedException(ex.getMessage());
         }
 
-        String responseBody = response.getBody();
-        System.out.println(responseBody);
+        ObjectMapper mapper = new ObjectMapper();
+
+        GitHubUser responseBody = mapper.convertValue(response.getBody(), GitHubUser.class) ;
         return responseBody;
     }
 

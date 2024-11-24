@@ -1,4 +1,4 @@
-package com.alext123411.DTO;
+package com.alext123411.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GitHubCallBack {
-    String str;
+public class RegisterRequest {
+
+    private String email;
+    private String password;
+
 }

@@ -1,35 +1,36 @@
-package com.alext123411.SecurityConfigs;
+package com.alext123411.config;
 
 
-import com.alext123411.Integration.GitHubService;
-import com.alext123411.User;
+import com.alext123411.dto.GitHubUser;
+import com.alext123411.github.GitHubService;
+import com.alext123411.user.User;
+import com.alext123411.user.UserService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.filter.GenericFilterBean;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
-
+@Component
 public class CustomAuthFilter implements Filter {
 
-    GitHubService ghService = new GitHubService();
+    private final GitHubService ghService;
+    private final UserService userService;
+
+    public CustomAuthFilter(
+            GitHubService ghService,
+            UserService userService
+    ) {
+        this.ghService = ghService;
+        this.userService = userService;
+    }
 
     public void printBody(ServletRequest request) throws IOException {
         BufferedReader reader = request.getReader();
@@ -50,9 +51,9 @@ public class CustomAuthFilter implements Filter {
 
     @Override
     public void doFilter(
-        ServletRequest servletRequest,
-        ServletResponse servletResponse,
-        FilterChain chain) throws IOException, ServletException {
+            ServletRequest servletRequest,
+            ServletResponse servletResponse,
+            FilterChain chain) throws IOException, ServletException {
 
         System.out.println("CUSTOM AUTH FILTER");
 
@@ -62,14 +63,21 @@ public class CustomAuthFilter implements Filter {
         String header = request.getHeader("Authorization");
         String token = header.substring(7);
 
-        String user = ghService.fetchUser(token);
+        GitHubUser gitHubUser = ghService.fetchUser(token);
+
+        System.out.println("USER - " + gitHubUser.getLogin());
+
+        User user = userService.getUserByGithubId(gitHubUser.getId());
+
+        if (user == null) System.out.println("NO SUCH USER");
+
 
         boolean hasAccess = true;
         if (hasAccess) {
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             Authentication authentication =
-                new TestingAuthenticationToken(user, "password", "ROLE_USER");
+                    new TestingAuthenticationToken(gitHubUser.getLogin(), "password", "ROLE_USER");
             context.setAuthentication(authentication);
 
             SecurityContextHolder.setContext(context);

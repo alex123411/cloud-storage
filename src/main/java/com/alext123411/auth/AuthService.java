@@ -1,27 +1,26 @@
-package com.alext123411;
+package com.alext123411.auth;
 
-import com.alext123411.DTO.RegisterRequest;
-import com.alext123411.Integration.GitHubService;
+import com.alext123411.github.GitHubService;
+import com.alext123411.user.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
-import java.util.UUID;
 
 @Service
 public class AuthService {
 
     private final GitHubService gitHubService;
-    private final UserRepo repo;
+    private final UserRepository userRepository;
 
     public AuthService(
             GitHubService gitHubService,
-            UserRepo repo
+            UserRepository userRepository
     ) {
         this.gitHubService = gitHubService;
-        this.repo = repo;
+        this.userRepository = userRepository;
     }
 
     public String login() {
@@ -29,15 +28,6 @@ public class AuthService {
         return gitHubService.getAuthorizeLink();
     }
 
-    public String register(RegisterRequest request) throws Exception {
-        // Return true or false
-        User user = repo.getUserByEmail(request.getEmail());
-        if (user != null) throw new Exception("User already exists");
-
-        UUID uuid = repo.addUser(request.getEmail(), request.getPassword());
-
-        return uuid.toString();
-    }
 
     public String loginGithub(String code) throws AccessDeniedException {
         return gitHubService.getAccessToken(code);
