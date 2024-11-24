@@ -1,11 +1,7 @@
 package com.alext123411;
 
-import com.alext123411.DTO.GitHubCallBack;
-import com.alext123411.DTO.LoginRequest;
-import com.alext123411.DTO.LoginResponse;
 import com.alext123411.DTO.RegisterRequest;
 import com.alext123411.Integration.GitHubService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,22 +17,16 @@ public class AuthService {
     private final UserRepo repo;
 
     public AuthService(
-        GitHubService gitHubService,
-        UserRepo repo
+            GitHubService gitHubService,
+            UserRepo repo
     ) {
         this.gitHubService = gitHubService;
         this.repo = repo;
     }
 
-    public LoginResponse login(LoginRequest request) {
-        // Return session token
-        User user = repo.getUserByEmailAndPassword(request.getEmail(), request.getPassword());
-
-        LoginResponse resp = new LoginResponse();
-        resp.setAccessToken(user.getUuid().toString());
-        resp.setRefreshToken("ref_token");
-
-        return resp;
+    public String login() {
+        // Return GitHub login link
+        return gitHubService.getAuthorizeLink();
     }
 
     public String register(RegisterRequest request) throws Exception {
@@ -56,7 +46,7 @@ public class AuthService {
     public String getCurrentUser() {
         SecurityContext context = SecurityContextHolder.getContext();
 
-        Authentication auth =  context.getAuthentication();
+        Authentication auth = context.getAuthentication();
 
         String princ = auth.getPrincipal().toString();
 

@@ -1,6 +1,5 @@
 package com.alext123411;
 
-import com.alext123411.DTO.GitHubCallBack;
 import com.alext123411.DTO.LoginRequest;
 import com.alext123411.DTO.LoginResponse;
 import com.alext123411.DTO.RegisterRequest;
@@ -16,31 +15,26 @@ import java.nio.file.AccessDeniedException;
 @Validated
 public class AuthController {
 
-    @Autowired
-    AuthService service;
+    private final AuthService authService;
 
-    @GetMapping("/public/test")
-    public String check() {
-        return "It works!! And upd";
+    AuthController(
+            AuthService authService
+    ) {
+        this.authService = authService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) throws Exception {
-        return ResponseEntity.ok(service.register(request));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
-        return ResponseEntity.ok(service.login(request));
-    }
-
-    @GetMapping("/user")
-    public ResponseEntity<String> loggedInUser() {
-        return ResponseEntity.ok(service.getCurrentUser());
+    @GetMapping("/login")
+    public ResponseEntity<String> login() {
+        return ResponseEntity.ok(authService.login());
     }
 
     @GetMapping("/public/oauth2/code/github")
     public ResponseEntity<String> loginGithub(@RequestParam String code) throws AccessDeniedException {
-        return ResponseEntity.ok(service.loginGithub(code));
+        return ResponseEntity.ok(authService.loginGithub(code));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<String> loggedInUser() {
+        return ResponseEntity.ok(authService.getCurrentUser());
     }
 }
