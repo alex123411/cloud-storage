@@ -1,7 +1,7 @@
 package com.alext123411.github;
 
 import com.alext123411.dto.GitHubUser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -43,9 +43,9 @@ public class GitHubService {
             throw new AccessDeniedException(ex.getMessage());
         }
 
-        ObjectMapper mapper = new ObjectMapper();
+        Gson gson = new Gson();
 
-        GitHubUser responseBody = mapper.convertValue(response.getBody(), GitHubUser.class) ;
+        GitHubUser responseBody = gson.fromJson(response.getBody(), GitHubUser.class);
         return responseBody;
     }
 

@@ -64,13 +64,11 @@ public class CustomAuthFilter implements Filter {
         String token = header.substring(7);
 
         GitHubUser gitHubUser = ghService.fetchUser(token);
-
         System.out.println("USER - " + gitHubUser.getLogin());
 
         User user = userService.getUserByGithubId(gitHubUser.getId());
 
         if (user == null) System.out.println("NO SUCH USER");
-
 
         boolean hasAccess = true;
         if (hasAccess) {

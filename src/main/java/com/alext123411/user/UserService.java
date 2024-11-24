@@ -10,6 +10,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User getUserByGithubId(Long id) {
-        return userRepository.findByGithubId(id);
+        return userRepository.findByGitHubId(id);
     }
 }
