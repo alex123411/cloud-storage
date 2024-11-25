@@ -11,34 +11,41 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Bean
-    @Order(1)
-    public SecurityFilterChain openSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/api/v1/auth/public/**")
-                .csrf(Customizer.withDefaults())
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
-                );
-        return http.build();
-    }
+//    @Bean
+//    @Order(1)
+//    public SecurityFilterChain openSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .securityMatcher(antMatcher("/api/v1/public/**"))
+//                .csrf(Customizer.withDefaults())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers(antMatcher("/github/**")).permitAll()
+//                )
+//                .addFilterBefore(
+//                        new CustomFilter(),
+//                        AuthorizationFilter.class
+//                );
+//        return http.build();
+//    }
 
     @Bean
-    @Order(2)
+    @Order(1)
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             GitHubService ghService,
             UserService userService
     ) throws Exception {
         http
-                .securityMatcher("/api/v1/**")
+                .securityMatcher(antMatcher("/api/v1/**"))
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(antMatcher("public/**")).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

@@ -27,6 +27,10 @@ public class GitHubService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    public String getAuthorizationLink() {
+        return gitHubBaseUrl + "/login/oauth/authorize?client_id=" + clientId;
+    }
+
     public GitHubUser fetchUser(String token) throws AccessDeniedException {
         String url = gitHubApiBaseUrl + "/user";
 
@@ -73,9 +77,5 @@ public class GitHubService {
         System.out.println(responseBody);
 
         return responseBody;
-    }
-
-    public String getAuthorizeLink() {
-        return "https://github.com/login/oauth/authorize?client_id=" + clientId;
     }
 }
