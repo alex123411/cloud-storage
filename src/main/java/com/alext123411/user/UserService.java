@@ -14,8 +14,10 @@ public class UserService {
     private final GitHubService gitHubService;
     private final UserRepository userRepository;
 
-    public User getUserByGithubId(Long id) {
-        return userRepository.findByGitHubId(id);
+    public User getUserByGithubId(Long id) throws Exception {
+        return userRepository.findByGitHubId(id).orElseThrow(
+                () -> new Exception("No User Found in Our System")
+        );
     }
 
     public String getCurrentUser() {

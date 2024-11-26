@@ -12,13 +12,11 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 
-@Component
 public class CustomAuthFilter implements Filter {
 
     private final GitHubService ghService;
@@ -49,28 +47,32 @@ public class CustomAuthFilter implements Filter {
         System.out.println("Request Body: " + body);
     }
 
+    public String getAuthorizationToken(HttpServletRequest request) throws AccessDeniedException {
+        String header = request.getHeader("Authorization");
+        if (header == null) throw new AccessDeniedException("No Token Provided");
+        return header.substring(7);
+    }
+
     @Override
     public void doFilter(
             ServletRequest servletRequest,
             ServletResponse servletResponse,
             FilterChain chain) throws IOException, ServletException {
 
-        System.out.println("CUSTOM AUTH FILTER");
-
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String header = request.getHeader("Authorization");
-        String token = header.substring(7);
+        String authorizationToken = getAuthorizationToken(request);
 
-        GitHubUser gitHubUser = ghService.fetchUser(token);
-        System.out.println("USER - " + gitHubUser.getLogin());
+        GitHubUser gitHubUser = ghService.fetchUser(authorizationToken);
 
-        User user = userService.getUserByGithubId(gitHubUser.getId());
+        try {
+            User user = userService.getUserByGithubId(gitHubUser.getId());
+        } catch (Exception e) {
+//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        }
 
-        if (user == null) System.out.println("NO SUCH USER");
-
-        boolean hasAccess = true;
+        boolean hasAccess = false;
         if (hasAccess) {
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();

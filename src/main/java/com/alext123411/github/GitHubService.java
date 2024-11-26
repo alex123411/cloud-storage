@@ -49,33 +49,27 @@ public class GitHubService {
 
         Gson gson = new Gson();
 
-        GitHubUser responseBody = gson.fromJson(response.getBody(), GitHubUser.class);
-        return responseBody;
+        GitHubUser user = gson.fromJson(response.getBody(), GitHubUser.class);
+        return user;
     }
 
     public String getAccessToken(String code) throws AccessDeniedException {
         String url = gitHubBaseUrl +
                 String.format("/login/oauth/access_token?client_id=%s&client_secret=%s&code=%s", clientId, clientSecret, code);
 
-        System.out.println(code);
-        System.out.println(url);
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/json");
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response;
+
         try {
             response = restTemplate
                     .exchange(url, HttpMethod.POST, entity, String.class);
         } catch (RestClientException ex) {
-            System.out.println(ex.getMessage());
             throw new AccessDeniedException(ex.getMessage());
         }
 
-        String responseBody = response.getBody();
-        System.out.println(responseBody);
-
-        return responseBody;
+        return response.getBody();
     }
 }

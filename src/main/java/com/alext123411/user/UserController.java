@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok("test");
     }
 
-    @GetMapping("/user")
+    @GetMapping("/")
     public ResponseEntity<String> loggedInUser() {
         return ResponseEntity.ok(userService.getCurrentUser());
     }
