@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Data
@@ -16,14 +15,16 @@ import org.checkerframework.common.aliasing.qual.Unique;
 public class User {
 
     @Id
-    private Long Id;
+    private Long id;
 
-    @Unique
     private Long gitHubId;
+
+    private SignUpType signUpType;
 
     private String login;
 
     private String avatarUrl;
 
     private String email;
+
 }

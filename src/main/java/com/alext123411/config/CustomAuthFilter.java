@@ -59,6 +59,8 @@ public class CustomAuthFilter implements Filter {
             ServletResponse servletResponse,
             FilterChain chain) throws IOException, ServletException {
 
+        System.out.println("Filter 2");
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
@@ -69,10 +71,10 @@ public class CustomAuthFilter implements Filter {
         try {
             User user = userService.getUserByGithubId(gitHubUser.getId());
         } catch (Exception e) {
-//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            // response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         }
 
-        boolean hasAccess = false;
+        boolean hasAccess = true;
         if (hasAccess) {
 
             SecurityContext context = SecurityContextHolder.createEmptyContext();

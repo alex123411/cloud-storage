@@ -14,17 +14,13 @@ public class UserController {
     private final UserService userService;
 
     public UserController(
-            UserService userService) {
+            UserService userService
+    ) {
         this.userService = userService;
     }
 
-    @GetMapping("/public/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("test");
-    }
-
-    @GetMapping("/")
-    public ResponseEntity<String> loggedInUser() {
+    @GetMapping("")
+    public ResponseEntity<User> loggedInUser() {
         return ResponseEntity.ok(userService.getCurrentUser());
     }
 }

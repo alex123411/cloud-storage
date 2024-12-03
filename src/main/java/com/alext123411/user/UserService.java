@@ -20,10 +20,16 @@ public class UserService {
         );
     }
 
-    public String getCurrentUser() {
+    public User getCurrentUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
         String princ = auth.getPrincipal().toString();
-        return princ;
+
+        User user = User.builder()
+                .id(1L)
+                .login(princ)
+                .build();
+
+        return user;
     }
 }

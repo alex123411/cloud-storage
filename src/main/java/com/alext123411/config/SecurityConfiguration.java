@@ -18,7 +18,7 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain openSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain publicSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/api/v1/public/**")
                 .csrf(Customizer.withDefaults())
@@ -30,25 +30,34 @@ public class SecurityConfiguration {
 
     @Bean
     @Order(2)
-    public SecurityFilterChain securityFilterChain(
+    public SecurityFilterChain apiSecurityFilterChain(
             HttpSecurity http,
             GitHubService ghService,
             UserService userService
     ) throws Exception {
         http
-                .securityMatcher("/api/v1/user/**")
+                .securityMatcher("/api/v1/**")
                 .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .anyRequest().authenticated()
-
                 )
-                .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
                 .addFilterBefore(
                         new CustomAuthFilter(ghService, userService),
                         AuthorizationFilter.class
                 )
                 .exceptionHandling(Customizer.withDefaults());
+        return http.build();
+    }
+
+    @Bean
+    @Order(3)
+    public SecurityFilterChain clientSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(Customizer.withDefaults())
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(Customizer.withDefaults());
         return http.build();
     }
 }
